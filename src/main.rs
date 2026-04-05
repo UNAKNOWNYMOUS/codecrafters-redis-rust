@@ -11,11 +11,17 @@ fn main() -> std::io::Result<()> {
         match stream {
             Ok(stream) => {
                 println!("Got connection from: {}", stream.peer_addr()?);
+                handle_client(stream)?;
             }
             Err(e) => {
                 eprint!("Failed to accept connection: {e}");
             }
         }
     }
+    Ok(())
+}
+
+fn handle_client(mut stream: TcpStream) -> std::io::Result<()> {
+    stream.write_all(b"+PONG\r\n")?;
     Ok(())
 }
