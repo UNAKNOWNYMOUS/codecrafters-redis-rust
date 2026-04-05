@@ -22,6 +22,15 @@ fn main() -> std::io::Result<()> {
 }
 
 fn handle_client(mut stream: TcpStream) -> std::io::Result<()> {
-    stream.write_all(b"+PONG\r\n")?;
-    Ok(())
+    let mut buf = [0u8; 4096];
+    loop {
+        let bytes_read = stream.read(&mut buf)?;
+
+        if bytes_read == 0 {
+            println!("Client disconnected!");
+            return Ok(());
+        }
+
+        stream.write_all(b"+PONG\r\n")?;
+    }
 }
